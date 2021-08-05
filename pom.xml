@@ -10,10 +10,9 @@
     </parent>
 
     <groupId>tech.bran.idp</groupId>
-    <artifactId>kryptonite-id</artifactId>
+    <artifactId>kryptonite</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <packaging>war</packaging>
-    <name>kryptonite-id</name>
     <description>mini IdP</description>
 
     <properties>
