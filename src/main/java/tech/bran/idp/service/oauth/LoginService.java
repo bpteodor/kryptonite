@@ -29,24 +29,23 @@ public class LoginService {
         final AuthSession session = tokenRepo.getSession(ssoCookie);
         if (session == null) {
             log.info("sso cookie {} not found. game over", ssoCookie);
-            throw new AuthzResponseException(null, "invalid_request", null); // fixme
+            throw new AuthzResponseException(null, "invalid_request", "missing sso cookie");
         }
 
         final UserData user = userRepo.search(username);
         if (user == null) {
             log.info("unknown user {}. game over", username);
-            throw new AuthzResponseException(null, "access_denied", null);
+            throw new AuthzResponseException(session.getRequest(), "access_denied", null);
         }
 
-        final String hashedPass = passwordEncoder.encode(password);
-        if (passwordEncoder.matches(password, hashedPass)) {
+        if (!passwordEncoder.matches(password, user.getPassword())) {
             log.info("invalid credentials for user {}", username);
-            throw new AuthzResponseException(null, "access_denied", null);
+            throw new AuthzResponseException(session.getRequest(), "access_denied", null);
         }
 
         log.info("user {} logged in", username);
         session.setSubject(username);
-        return sessionService.authzSuccess(session);
+        return "redirect:" + sessionService.authzSuccess(session);
     }
 
     // TODO

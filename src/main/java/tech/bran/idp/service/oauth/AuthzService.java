@@ -57,7 +57,7 @@ public class AuthzService {
             return sessionService.authzSuccess(sso);
         }
 
-        log.info("no valid session found");
+        log.info("no valid session found, go to login...");
         sessionService.generateAuthSession(req);
 
         return "redirect:/login.html";

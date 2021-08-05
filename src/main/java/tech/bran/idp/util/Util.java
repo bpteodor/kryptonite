@@ -1,11 +1,8 @@
 package tech.bran.idp.util;
 
 import org.springframework.util.Assert;
-import org.springframework.util.StringUtils;
 import org.springframework.web.util.UriComponentsBuilder;
 import tech.bran.idp.api.model.AuthzRequest;
-import tech.bran.idp.service.repo.dto.AuthSession;
-import tech.bran.idp.util.validation.ErrorResponseException;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
@@ -13,7 +10,6 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Optional;
-import java.util.UUID;
 
 public class Util {
 
@@ -22,9 +18,8 @@ public class Util {
      * Authorization Response - error
      */
     public static String authzErr(AuthzRequest req, String error, String description) {
-        if (!StringUtils.hasLength(req.getRedirectUri())) {
-            throw new ErrorResponseException(error);
-        }
+        Assert.hasLength(req.getRedirectUri(), "expected redirect_uri");
+
         return UriComponentsBuilder.fromUriString(req.getRedirectUri())
                 .queryParam("error", error)
                 .queryParamIfPresent("error_description", Optional.ofNullable(description))

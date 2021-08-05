@@ -17,7 +17,7 @@ public class UserRepository {
 
     final PasswordEncoder encoder;
 
-    List<UserData> users = List.of(
+    final List<UserData> users = List.of(
             new UserData().setUsername("teo@example.com").setPassword("secret"),
             new UserData().setUsername("max@example.com").setPassword("secret"),
             new UserData().setUsername("ana@example.com").setPassword("secret")

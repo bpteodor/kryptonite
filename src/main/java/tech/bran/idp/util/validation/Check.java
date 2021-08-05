@@ -93,7 +93,7 @@ public class Check<T> {
         if (!predicate.test(value)) {
             final String error = String.format(msg, params);
             log.debug(error);
-            throw new ErrorResponseException(error);
+            throw new ResponseException(error);
         }
     }
 

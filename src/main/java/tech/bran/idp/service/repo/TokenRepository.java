@@ -7,6 +7,8 @@ import tech.bran.idp.service.repo.dto.AuthSession;
 import java.util.HashMap;
 import java.util.Map;
 
+import static org.springframework.util.StringUtils.hasLength;
+
 /**
  * db for session & tokens
  */
@@ -17,7 +19,7 @@ public class TokenRepository {
     final Map<String, AuthSession> sessions = new HashMap<>();
 
     public AuthSession getSession(String sessionId) {
-        return sessions.get(sessionId);
+        return hasLength(sessionId) ? sessions.get(sessionId) : null;
     }
 
     public AuthSession saveSession(String ssoId, AuthSession sso) {
