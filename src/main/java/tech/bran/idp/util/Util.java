@@ -1,28 +1,59 @@
 package tech.bran.idp.util;
 
+import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 import org.springframework.web.util.UriComponentsBuilder;
 import tech.bran.idp.api.model.AuthzRequest;
-import tech.bran.idp.service.validation.ErrorResponseException;
+import tech.bran.idp.service.repo.dto.AuthSession;
+import tech.bran.idp.util.validation.ErrorResponseException;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletResponse;
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Optional;
+import java.util.UUID;
 
 public class Util {
 
+
+    /**
+     * Authorization Response - error
+     */
     public static String authzErr(AuthzRequest req, String error, String description) {
         if (!StringUtils.hasLength(req.getRedirectUri())) {
             throw new ErrorResponseException(error);
         }
-        return "redirect:" + UriComponentsBuilder.fromUriString(req.getRedirectUri())
+        return UriComponentsBuilder.fromUriString(req.getRedirectUri())
                 .queryParam("error", error)
                 .queryParamIfPresent("error_description", Optional.ofNullable(description))
                 .queryParamIfPresent("state", Optional.ofNullable(req.getState()))
-                .build();
+                .build().toUriString();
     }
+
 
     public static LocalDateTime now() {
         return LocalDateTime.now(ZoneId.of("UTC"));
+    }
+
+    /**
+     * @return expiration time
+     */
+    public static LocalDateTime exp(Duration timeout) {
+        return now().plus(timeout);
+    }
+
+    public static Cookie setCookie(HttpServletResponse response, String name, String value, Duration timeout) {
+
+        final Cookie cookie = new Cookie(name, value);
+        cookie.setMaxAge((int) timeout.toSeconds());
+        cookie.setHttpOnly(true);
+        //cookie.setSecure(true); not for an exercise
+        //cookie.setDomain(); todo cookie domain + path
+        //cookie.setPath();
+
+        response.addCookie(cookie);
+        return cookie;
     }
 }

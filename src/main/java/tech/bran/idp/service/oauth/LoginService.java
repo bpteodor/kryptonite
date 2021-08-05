@@ -1,0 +1,55 @@
+package tech.bran.idp.service.oauth;
+
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+import tech.bran.idp.service.repo.TokenRepository;
+import tech.bran.idp.service.repo.UserRepository;
+import tech.bran.idp.service.repo.dto.AuthSession;
+import tech.bran.idp.service.repo.dto.UserData;
+import tech.bran.idp.util.validation.AuthzResponseException;
+
+/**
+ * handles login operation
+ */
+@Slf4j
+@RequiredArgsConstructor
+@Service
+public class LoginService {
+
+    final UserRepository userRepo;
+    final TokenRepository tokenRepo;
+    final PasswordEncoder passwordEncoder;
+    final SessionService sessionService;
+
+    // todo: try counter, account lock, etc
+    public String login(String username, String password, String ssoCookie) {
+
+        final AuthSession session = tokenRepo.getSession(ssoCookie);
+        if (session == null) {
+            log.info("sso cookie {} not found. game over", ssoCookie);
+            throw new AuthzResponseException(null, "invalid_request", null); // fixme
+        }
+
+        final UserData user = userRepo.search(username);
+        if (user == null) {
+            log.info("unknown user {}. game over", username);
+            throw new AuthzResponseException(null, "access_denied", null);
+        }
+
+        final String hashedPass = passwordEncoder.encode(password);
+        if (passwordEncoder.matches(password, hashedPass)) {
+            log.info("invalid credentials for user {}", username);
+            throw new AuthzResponseException(null, "access_denied", null);
+        }
+
+        log.info("user {} logged in", username);
+        session.setSubject(username);
+        return sessionService.authzSuccess(session);
+    }
+
+    // TODO
+    //public void grantScopes() {
+    //}
+}

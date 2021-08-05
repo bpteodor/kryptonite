@@ -16,6 +16,7 @@ public class ConfigRepository {
             "demo", new ClientConfig()
                     .setClientId("demo")
                     .setClientSecret("demo")
+                    .setType(ClientConfig.ClientType.CONFIDENTIAL)
                     .setRedirectUris(Set.of("http://localhost/callback"))
                     .setAllowedScopes(Set.of("profile", "email", "phone"))
     );

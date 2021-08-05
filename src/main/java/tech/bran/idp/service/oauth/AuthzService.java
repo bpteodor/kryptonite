@@ -5,18 +5,17 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import tech.bran.idp.api.model.AuthzRequest;
-import tech.bran.idp.service.config.AppConfig;
+import tech.bran.idp.config.AppConfig;
 import tech.bran.idp.service.repo.ConfigRepository;
 import tech.bran.idp.service.repo.TokenRepository;
 import tech.bran.idp.service.repo.dto.AuthSession;
 import tech.bran.idp.service.repo.dto.ClientConfig;
-import tech.bran.idp.service.validation.Check;
+import tech.bran.idp.util.validation.Check;
 
 import static org.springframework.util.CollectionUtils.isEmpty;
-import static tech.bran.idp.util.Util.now;
 
 /**
- * logic for the authorization endpoint
+ * handles the authorization endpoint logic
  */
 @Slf4j
 @RequiredArgsConstructor
@@ -26,8 +25,9 @@ public class AuthzService {
     final ConfigRepository configRepo;
     final TokenRepository tokenRepo;
     final AppConfig appConfig;
+    final SessionService sessionService;
 
-    public String auth(AuthzRequest req, String sso) {
+    public String auth(AuthzRequest req, String ssoCookie) {
 
         // check client
         Check.that(req.getClientId()).matches("[\\w_-]+").orSend("unauthorized_client");
@@ -48,24 +48,19 @@ public class AuthzService {
         final String[] scopes = StringUtils.hasLength(req.getScope()) ? req.getScope().split("\\s+") : new String[]{};
         Check.that(scopes).areContainedIn(client.getAllowedScopes()).orSendAuthorizationError(req, "invalid_scope");
 
-        if (isSessionValid(sso)) {
-            return authzCode(req, sso);
+        log.trace("/authorize validation passed");
+
+        final AuthSession sso = sessionService.getValidSession(ssoCookie);
+        if (null != sso) {
+            log.info("session is valid");
+            sso.setRequest(req);
+            return sessionService.authzSuccess(sso);
         }
 
-        return "redirect:login";
-    }
+        log.info("no valid session found");
+        sessionService.generateAuthSession(req);
 
-    private String authzCode(AuthzRequest req, String sso) {
-        return "todo"; // TODO
-    }
-
-    /**
-     * check
-     */
-    private boolean isSessionValid(String ssoId) {
-        final AuthSession sso = tokenRepo.getSession(ssoId);
-        log.debug("session {} found", ssoId);
-        return sso != null && sso.getExp() != null && now().isBefore(sso.getExp().plus(appConfig.getSsoTimeout()));
+        return "redirect:/login.html";
     }
 
 }

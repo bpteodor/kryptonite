@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.*;
 import tech.bran.idp.api.model.AuthzRequest;
 import tech.bran.idp.api.model.TokenRequest;
 import tech.bran.idp.service.oauth.AuthzService;
+import tech.bran.idp.util.Const;
 
 @RequiredArgsConstructor
 @Controller
@@ -22,8 +23,7 @@ public class OauthResource {
                             @RequestParam(value = "state", required = false) String state,
                             //@RequestParam("code_challenge_method") String codeChallengeMethod, TODO pixie
                             //@RequestParam("code_challenge") String codeChallenge
-                            @CookieValue(name = "KRYPTONITE", required = false) String ssoSession
-    ) {
+                            @CookieValue(name = Const.SSO_COOKIE_NAME, required = false) String ssoCookie) {
         return authzService.auth(
                 new AuthzRequest()
                         .setResponseType(responseType)
@@ -31,8 +31,9 @@ public class OauthResource {
                         .setScope(scope)
                         .setRedirectUri(redirectUri)
                         .setState(state),
-                ssoSession);
+                ssoCookie);
     }
+
 
     @PostMapping("/token")
     public void token(@RequestBody TokenRequest req) {

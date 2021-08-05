@@ -1,4 +1,4 @@
-package tech.bran.idp.service.validation;
+package tech.bran.idp.util.validation;
 
 public class ErrorResponseException extends RuntimeException {
     public ErrorResponseException(String msg) {

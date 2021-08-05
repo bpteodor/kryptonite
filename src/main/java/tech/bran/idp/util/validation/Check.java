@@ -1,4 +1,4 @@
-package tech.bran.idp.service.validation;
+package tech.bran.idp.util.validation;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -7,6 +7,7 @@ import tech.bran.idp.api.model.AuthzRequest;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Objects;
 import java.util.function.Predicate;
@@ -61,9 +62,12 @@ public class Check<T> {
         return this;
     }
 
-    public <X> Check<T> areContainedIn(Collection<X> collection) {
-        isValid(x -> collection != null && ((x instanceof Collection && collection.containsAll((Collection<X>) x)) || collection.contains(x)));
-        return this;
+    public <E, X extends Collection<E>> Check<X> areContainedIn(Collection<E> collection) {
+        isValid(x -> collection != null && x != null &&
+                ((x instanceof Collection && collection.containsAll((Collection<E>) x)) ||
+                        (x instanceof Object[] && collection.containsAll(Arrays.asList((E[]) x))) ||
+                        collection.contains(x)));
+        return (Check<X>) this;
     }
 
     /**
@@ -94,7 +98,7 @@ public class Check<T> {
     }
 
     public Check<T> emptyOrValidUri() {
-        return isValid((x) -> x == null || "".equals(x) && isValidUri((String) x));
+        return isValid((x) -> x == null || "".equals(x) || isValidUri((String) x));
     }
 
     private static <T> boolean isString(T x) {

@@ -1,4 +1,4 @@
-package tech.bran.idp.service.config;
+package tech.bran.idp.config;
 
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Value;
@@ -15,6 +15,12 @@ public class AppConfig {
 
     @Value("${sso.timeout:1h}")
     private Duration ssoTimeout;
+
+    /**
+     * if the user doesn't finish to auth in this time he/she will have to start again
+     */
+    @Value("${sso.timeout:5m}")
+    private Duration authTimeout;
 
 
     @Value("${oauth.token.timeout:20m}")
