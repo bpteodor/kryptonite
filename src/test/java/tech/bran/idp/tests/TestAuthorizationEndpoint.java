@@ -28,7 +28,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc(printOnlyOnFailure = false)
 @SpringBootTest
 @ActiveProfiles({"test"})
-public class TestAuthorization {
+public class TestAuthorizationEndpoint {
 
     @Autowired
     protected MockMvc mockMvc;
