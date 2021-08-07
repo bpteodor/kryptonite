@@ -1,39 +1,59 @@
 package tech.bran.idp.config;
 
 import lombok.Data;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.validation.annotation.Validated;
+import tech.bran.idp.service.repo.dto.ClientConfig;
+import tech.bran.idp.service.repo.dto.UserData;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.time.Duration;
+import java.util.List;
+import java.util.Map;
 
 @Data
-@ConfigurationProperties(prefix = "idp")
+@ConfigurationProperties
+@Validated
 public class AppConfig {
 
-    // OAuth ----------------------------------
+    @NotNull
+    private OauthConfig oauth;
 
-    @Value("${oauth.issuer}")
-    private String issuer;
+    @NotNull
+    private IdpConfig idp;
 
-    @Value("${oauth.token.expiration:20m}")
-    private Duration tokenExpiration;
+    @NotEmpty
+    private Map<String, ClientConfig> clients;
 
-    @Value("${oauth.token.signature.HMAC}")
-    private String tokenSignatureHMAC;
+    @NotEmpty
+    final List<UserData> users;
 
+    @Data
+    public static class OauthConfig {
 
-    // IdP -------------------------------------
+        @NotBlank
+        private String issuer;
 
-    @Value("${sso.timeout:1h}")
-    private Duration ssoTimeout;
+        @NotNull
+        private Duration tokenExpiration;
 
-    /**
-     * if the user doesn't proceed in this time he/she will have to start again
-     */
-    @Value("${sso.timeout:10m}")
-    private Duration authTimeout;
+        @NotNull
+        private String tokenSignatureHMAC;
+    }
 
+    @Data
+    public static class IdpConfig {
 
-    // General ---------------------------------
+        @NotNull
+        private Duration ssoTimeout;
+
+        /**
+         * if the user doesn't proceed in this time he/she will have to start again
+         */
+        @NotNull
+        private Duration authTimeout;
+    }
 
 }

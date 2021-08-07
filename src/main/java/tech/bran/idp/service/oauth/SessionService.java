@@ -43,7 +43,7 @@ public class SessionService {
             log.info("session {} found", ssoId);
             return null;
         }
-        if (now().isBefore(sso.getExpiration().plus(config.getSsoTimeout()))) {
+        if (now().isBefore(sso.getExpiration().plus(config.getIdp().getSsoTimeout()))) {
             log.info("session {} expired", ssoId);
             return null;
         }
@@ -58,11 +58,11 @@ public class SessionService {
         final String ssoId = UUID.randomUUID().toString();
         final AuthSession sso = new AuthSession()
                 .setRequest(req)
-                .setExpiration(exp(config.getAuthTimeout()));
+                .setExpiration(exp(config.getIdp().getAuthTimeout()));
 
         tokenRepo.saveSession(ssoId, sso);
 
-        Util.setCookie(response, Const.SSO_COOKIE_NAME, ssoId, config.getAuthTimeout());
+        Util.setCookie(response, Const.SSO_COOKIE_NAME, ssoId, config.getIdp().getAuthTimeout());
 
         log.debug("generated new session {}", ssoId);
         return sso;
@@ -79,7 +79,7 @@ public class SessionService {
 
         // update session expiration time
         sso.setAuthzCode(authzCode)
-                .setExpiration(Util.exp(config.getAuthTimeout()));
+                .setExpiration(Util.exp(config.getIdp().getAuthTimeout()));
 
         return UriComponentsBuilder.fromUriString(redirectUri)
                 .queryParam("code", authzCode)
@@ -99,15 +99,15 @@ public class SessionService {
     public String generateAccessToken(AuthSession session) {
 
         // in the enterprise version use algorithm configured for client :)
-        final Signer signer = HMACSigner.newSHA256Signer(config.getTokenSignatureHMAC());
+        final Signer signer = HMACSigner.newSHA256Signer(config.getOauth().getTokenSignatureHMAC());
 
         final ZonedDateTime now = ZonedDateTime.now(ZoneOffset.UTC);
 
         // Build a new JWT with an issuer(iss), issued at(iat), subject(sub) and expiration(exp)
-        final JWT jwt = new JWT().setIssuer(config.getIssuer())
+        final JWT jwt = new JWT().setIssuer(config.getOauth().getIssuer())
                 .setIssuedAt(now)
                 .setSubject(session.getSubject())
-                .setExpiration(now.plus(config.getTokenExpiration()));
+                .setExpiration(now.plus(config.getOauth().getTokenExpiration()));
 
         if (StringUtils.hasLength(session.getRequest().getScope()))
             jwt.addClaim("scope", session.getRequest().getScope());

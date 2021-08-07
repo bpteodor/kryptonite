@@ -5,7 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import tech.bran.idp.service.repo.TokenRepository;
-import tech.bran.idp.service.repo.UserRepository;
+import tech.bran.idp.service.repo.UserStore;
 import tech.bran.idp.service.repo.dto.AuthSession;
 import tech.bran.idp.service.repo.dto.UserData;
 import tech.bran.idp.util.validation.AuthzResponseException;
@@ -18,7 +18,7 @@ import tech.bran.idp.util.validation.AuthzResponseException;
 @Service
 public class LoginService {
 
-    final UserRepository userRepo;
+    final UserStore userRepo;
     final TokenRepository tokenRepo;
     final PasswordEncoder passwordEncoder;
     final SessionService sessionService;

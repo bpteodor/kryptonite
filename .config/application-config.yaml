@@ -1,0 +1,29 @@
+#
+# configuration example for running locally
+#
+
+# identity provider config
+idp:
+  ssoTimeout: "1h"    # session expiration
+  authTimeout: "10m"  # if the user doesn't proceed in this time will have to start again
+
+# oauth config
+oauth:
+  issuer: https://kryptonite.bran.tech
+  tokenExpiration: "15m"
+  tokenSignatureHMAC: ${random.value}
+
+clients:
+  demo:
+    clientId: demo
+    clientSecret: demo
+    type: CONFIDENTIAL
+    redirectUris: [ "http://localhost/callback" ]
+    allowedScopes: [ "profile", "email", "phone" ]
+
+# dummy data
+users:
+  - username: teo
+    password: teo
+  - username: max
+    password: secret

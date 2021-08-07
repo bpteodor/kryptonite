@@ -8,7 +8,7 @@ import org.springframework.util.StringUtils;
 import tech.bran.idp.api.model.TokenRequest;
 import tech.bran.idp.api.model.TokenResponse;
 import tech.bran.idp.config.AppConfig;
-import tech.bran.idp.service.repo.ConfigRepository;
+import tech.bran.idp.service.repo.ConfigStore;
 import tech.bran.idp.service.repo.dto.AuthSession;
 import tech.bran.idp.service.repo.dto.ClientConfig;
 import tech.bran.idp.util.BasicAuthentication;
@@ -20,7 +20,7 @@ import tech.bran.idp.util.validation.Check;
 @Service
 public class TokenService {
 
-    final ConfigRepository configRepo;
+    final ConfigStore configRepo;
     final SessionService sessionService;
     final AppConfig config;
     final PasswordEncoder encoder;
@@ -71,7 +71,7 @@ public class TokenService {
         return new TokenResponse()
                 .setAccessToken(token)
                 //todo .setRefreshToken()
-                .setExpiresIn(config.getTokenExpiration().toSeconds())
+                .setExpiresIn(config.getOauth().getTokenExpiration().toSeconds())
                 .setScope(session.getRequest().getScope()); // TODO consent page?
     }
 

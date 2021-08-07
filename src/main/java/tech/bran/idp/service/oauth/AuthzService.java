@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import tech.bran.idp.api.model.AuthzRequest;
 import tech.bran.idp.config.AppConfig;
-import tech.bran.idp.service.repo.ConfigRepository;
+import tech.bran.idp.service.repo.ConfigStore;
 import tech.bran.idp.service.repo.TokenRepository;
 import tech.bran.idp.service.repo.dto.AuthSession;
 import tech.bran.idp.service.repo.dto.ClientConfig;
@@ -22,9 +22,9 @@ import static org.springframework.util.CollectionUtils.isEmpty;
 @Service
 public class AuthzService {
 
-    final ConfigRepository configRepo;
+    final ConfigStore configRepo;
     final TokenRepository tokenRepo;
-    final AppConfig appConfig;
+    final AppConfig config;
     final SessionService sessionService;
 
     public String auth(AuthzRequest req, String ssoCookie) {
