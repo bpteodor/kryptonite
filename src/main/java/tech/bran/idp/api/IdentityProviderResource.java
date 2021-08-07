@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import tech.bran.idp.service.oauth.LoginService;
+import tech.bran.idp.service.auth.LoginService;
 import tech.bran.idp.util.Const;
 
 

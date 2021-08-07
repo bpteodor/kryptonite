@@ -12,7 +12,6 @@
     <groupId>tech.bran.idp</groupId>
     <artifactId>kryptonite</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <packaging>war</packaging>
     <description>lightweight OAuth 2.0 authorization server</description>
 
     <properties>
@@ -42,11 +41,6 @@
             <version>4.2.0</version>
         </dependency>
 
-        <!--dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-lang3</artifactId>
-        </dependency-->
-
         <!-- provided -->
 
         <dependency>
@@ -59,11 +53,6 @@
             <artifactId>lombok</artifactId>
             <version>1.18.20</version>
             <scope>provided</scope>
-        </dependency>
-
-        <dependency> <!-- todo remove this -->
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-devtools</artifactId>
         </dependency>
 
         <!-- test -->

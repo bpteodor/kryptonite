@@ -1,4 +1,4 @@
-package tech.bran.idp.service.oauth;
+package tech.bran.idp.service.auth;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -15,10 +15,13 @@ import tech.bran.idp.util.BasicAuthentication;
 import tech.bran.idp.util.Util;
 import tech.bran.idp.util.validation.Check;
 
+/**
+ *
+ */
 @Slf4j
 @RequiredArgsConstructor
 @Service
-public class TokenService {
+public class OauthTokenService {
 
     final ConfigStore configRepo;
     final SessionService sessionService;

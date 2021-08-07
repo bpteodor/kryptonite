@@ -1,4 +1,4 @@
-package tech.bran.idp.service.oauth;
+package tech.bran.idp.service.auth;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

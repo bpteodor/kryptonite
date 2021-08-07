@@ -1,4 +1,4 @@
-package tech.bran.idp.service.oauth;
+package tech.bran.idp.service.auth;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,7 +20,7 @@ import static org.springframework.util.CollectionUtils.isEmpty;
 @Slf4j
 @RequiredArgsConstructor
 @Service
-public class AuthzService {
+public class OauthAuthorizeService {
 
     final ConfigStore configRepo;
     final TokenRepository tokenRepo;

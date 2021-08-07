@@ -1,4 +1,4 @@
-package tech.bran.idp.service.oauth;
+package tech.bran.idp.service.auth;
 
 import io.fusionauth.jwt.Signer;
 import io.fusionauth.jwt.domain.JWT;

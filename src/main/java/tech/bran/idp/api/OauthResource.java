@@ -6,8 +6,8 @@ import org.springframework.web.bind.annotation.*;
 import tech.bran.idp.api.model.AuthzRequest;
 import tech.bran.idp.api.model.TokenRequest;
 import tech.bran.idp.api.model.TokenResponse;
-import tech.bran.idp.service.oauth.AuthzService;
-import tech.bran.idp.service.oauth.TokenService;
+import tech.bran.idp.service.auth.OauthAuthorizeService;
+import tech.bran.idp.service.auth.OauthTokenService;
 import tech.bran.idp.util.Const;
 
 import javax.servlet.http.HttpServletRequest;
@@ -17,8 +17,8 @@ import javax.servlet.http.HttpServletRequest;
 @RequestMapping
 public class OauthResource {
 
-    private final AuthzService authzService;
-    private final TokenService tokenService;
+    private final OauthAuthorizeService authzService;
+    private final OauthTokenService tokenService;
 
     @GetMapping("/authorize")
     public String authorize(@RequestParam("response_type") String responseType,
