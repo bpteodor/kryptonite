@@ -32,7 +32,7 @@ public class Util {
     }
 
 
-    public static LocalDateTime now() {
+    public static LocalDateTime nowUtc() {
         return LocalDateTime.now(ZoneId.of("UTC"));
     }
 
@@ -40,7 +40,7 @@ public class Util {
      * @return expiration time
      */
     public static LocalDateTime exp(Duration timeout) {
-        return now().plus(timeout);
+        return LocalDateTime.now().plus(timeout);
     }
 
     public static Cookie setCookie(HttpServletResponse response, String name, String value, Duration timeout) {

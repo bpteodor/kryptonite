@@ -71,6 +71,9 @@ public class OauthTokenService {
         log.debug("request valid");
         final String token = sessionService.generateAccessToken(session);
 
+        // auth complete - update sso expiration
+        session.setExpiration(Util.exp(config.getIdp().getSsoTimeout()));
+
         return new TokenResponse()
                 .setAccessToken(token)
                 //todo .setRefreshToken()

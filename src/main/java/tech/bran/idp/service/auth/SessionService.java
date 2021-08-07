@@ -17,13 +17,13 @@ import tech.bran.idp.util.Const;
 import tech.bran.idp.util.Util;
 
 import javax.servlet.http.HttpServletResponse;
+import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.util.Optional;
 import java.util.UUID;
 
 import static tech.bran.idp.util.Util.exp;
-import static tech.bran.idp.util.Util.now;
 
 /**
  * Handles session, tokens, authorization codes
@@ -40,11 +40,11 @@ public class SessionService {
     public AuthSession getValidSession(String ssoId) {
         final AuthSession sso = tokenRepo.getSession(ssoId);
         if (sso == null || sso.getExpiration() == null) {
-            log.info("session {} found", ssoId);
+            log.info("session not found");
             return null;
         }
-        if (now().isBefore(sso.getExpiration().plus(config.getIdp().getSsoTimeout()))) {
-            log.info("session {} expired", ssoId);
+        if (LocalDateTime.now().isAfter(sso.getExpiration())) {
+            log.info("session expired");
             return null;
         }
         return sso;
@@ -77,8 +77,9 @@ public class SessionService {
 
         final String authzCode = UUID.randomUUID().toString();
 
-        // update session expiration time
+        // update session
         sso.setAuthzCode(authzCode)
+                .setSubject(sso.getSubject())
                 .setExpiration(Util.exp(config.getIdp().getAuthTimeout()));
 
         return UriComponentsBuilder.fromUriString(redirectUri)

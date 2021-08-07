@@ -4,10 +4,12 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import tech.bran.idp.config.AppConfig;
 import tech.bran.idp.service.repo.TokenRepository;
 import tech.bran.idp.service.repo.UserStore;
 import tech.bran.idp.service.repo.dto.AuthSession;
 import tech.bran.idp.service.repo.dto.UserData;
+import tech.bran.idp.util.Util;
 import tech.bran.idp.util.validation.AuthzResponseException;
 
 /**
@@ -22,6 +24,7 @@ public class LoginService {
     final TokenRepository tokenRepo;
     final PasswordEncoder passwordEncoder;
     final SessionService sessionService;
+    final AppConfig config;
 
     // todo: try counter, account lock, etc
     public String login(String username, String password, String ssoCookie) {
@@ -44,7 +47,6 @@ public class LoginService {
         }
 
         log.info("user {} logged in", username);
-        session.setSubject(username);
         return "redirect:" + sessionService.authzSuccess(session);
     }
 
