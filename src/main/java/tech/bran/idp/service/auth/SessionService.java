@@ -82,7 +82,7 @@ public class SessionService {
                 .setSubject(sso.getSubject())
                 .setExpiration(Util.exp(config.getIdp().getAuthTimeout()));
 
-        return UriComponentsBuilder.fromUriString(redirectUri)
+        return "redirect:" + UriComponentsBuilder.fromUriString(redirectUri)
                 .queryParam("code", authzCode)
                 .queryParamIfPresent("state", Optional.ofNullable(sso.getRequest().getState()))
                 .build().toUriString();

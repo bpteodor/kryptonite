@@ -47,7 +47,7 @@ public class LoginService {
         }
 
         log.info("user {} logged in", username);
-        return "redirect:" + sessionService.authzSuccess(session);
+        return sessionService.authzSuccess(session);
     }
 
     // TODO
