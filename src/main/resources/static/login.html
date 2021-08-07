@@ -1,18 +1,43 @@
 <!doctype html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Kryptonite</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
+    <link rel="icon" href="favicon.ico">
+
+
+    <style>
+        .container {
+            max-width: 500px;
+            padding-top: 100px;
+        }
+
+    </style>
 </head>
-<body>
-<h1>Login</h1>
-<form id="frmLogin" action="/login" method="post">
-    <input name="username"/>
-    <input name="password" type="password"/>
-    <input id="btnLogin" type="submit" value="Login"/>
-</form>
+<body class="text-center">
+
+<div class="container">
+    <form id="frmLogin" action="/login" method="post">
+        <img class="mb-4" src="favicon.ico" alt="kryptonite" width="72" height="57">
+        <h1 class="h3 mb-3">Please sign in</h1>
+
+        <div class="form-floating mb-3">
+            <input class="form-control" id="username" name="username" placeholder="max">
+            <label for="username">Username</label>
+        </div>
+
+        <div class="form-floating mb-3">
+            <input type="password" class="form-control" id="password" name="password" placeholder="Password">
+            <label for="password">Password</label>
+        </div>
+
+        <input id="btnLogin" type="submit" value="Sign in" class="btn btn-lg btn-dark"/>
+    </form>
+</div>
+
 </body>
 </html>

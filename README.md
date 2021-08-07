@@ -10,7 +10,7 @@ Requirements:
 
 ```
 # build project
-docker run -it --rm -v "$(pwd)":/usr/src/kryptonite -w /usr/src/kryptonite maven:3.8-openjdk-11 mvn clean package
+docker run -it --rm -u 1000 -v "$(pwd)":/usr/src/kryptonite -w /usr/src/kryptonite maven:3.8-openjdk-11 mvn clean package
 
 # build image
 docker build -t kryptonite .
