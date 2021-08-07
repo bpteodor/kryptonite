@@ -36,7 +36,7 @@ public class LoginService {
 
         final UserData user = userRepo.search(username);
         if (user == null) {
-            log.info("unknown user {}. game over", username);
+            log.info("unknown user {}", username);
             //throw new AuthzResponseException(session.getRequest(), "access_denied", null);
             return "redirect:/login.html"; // back to login page
         }
