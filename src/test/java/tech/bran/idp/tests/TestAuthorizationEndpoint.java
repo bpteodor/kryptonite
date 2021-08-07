@@ -50,7 +50,7 @@ public class TestAuthorizationEndpoint {
                         .queryParam("state", UUID.randomUUID().toString())
                         .queryParam("redirect_uri", redirectUri))
                 .andExpect(status().isFound())
-                .andExpect(header().string("location", is("/login.html")))
+                .andExpect(redirectedUrl("/login.html"))
                 .andExpect(cookie().value(Const.SSO_COOKIE_NAME, notNullValue()))
                 .andReturn().getResponse().getCookie(Const.SSO_COOKIE_NAME).getValue();
 
