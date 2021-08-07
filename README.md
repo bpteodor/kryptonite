@@ -17,11 +17,13 @@ docker build -t kryptonite .
 
 # run
 docker run --rm -ti -p8080:8080 -v $(pwd)/config/:/etc/kryptonite kryptonite
-
-curl http://localhost:8080/authorize?response_type=code&state=cucubau%C3%9F&client_id=demo&scope=profile%20email&redirect_uri=http%3A%2F%2Flocalhost%2Fcallback
 ```
 
-## build & run
+Sample Authorization call:
+http://localhost:8080/authorize?response_type=code&state=some-data%C3%9F&client_id=demo&scope=profile%20email&redirect_uri=http%3A%2F%2Flocalhost%2Fcallback
+
+
+## build & run natively
 
 Requirements:
 
@@ -35,3 +37,4 @@ mvn clean package
 # run
 java -jar target/kryptonite-0.0.1-SNAPSHOT.jar --spring.config.location=file:.config/application-config.yaml
 ```
+
