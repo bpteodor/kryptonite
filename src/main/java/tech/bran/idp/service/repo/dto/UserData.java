@@ -15,6 +15,8 @@ public class UserData {
     @NotBlank
     String password;
 
+    String name;
+
     boolean accountLocked;
 
 }
