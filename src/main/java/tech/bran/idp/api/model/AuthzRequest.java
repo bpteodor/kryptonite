@@ -12,8 +12,4 @@ public class AuthzRequest {
     private String scope;
     private String redirectUri;
     private String state;
-
-    // TODO pkce
-    private String codeChallengeMethod;
-    private String codeChallenge;
 }

@@ -12,6 +12,9 @@ import tech.bran.idp.util.Const;
 
 import javax.servlet.http.HttpServletRequest;
 
+/**
+ * OAuth2 endpoints
+ */
 @RequiredArgsConstructor
 @Controller
 @RequestMapping
@@ -50,6 +53,6 @@ public class OauthResource {
                 .setCode(code)
                 .setRedirectUri(redirectUri)
                 .setClientId(clientId)
-                .setCredentials(request.getHeader("Authorization")));
+                .setClientCredentials(request.getHeader("Authorization")));
     }
 }

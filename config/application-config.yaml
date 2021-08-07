@@ -1,5 +1,5 @@
 #
-# configuration example for running locally
+# configuration example
 #
 
 # identity provider config
@@ -7,7 +7,7 @@ idp:
   ssoTimeout: "1h"    # session expiration
   authTimeout: "10m"  # if the user doesn't proceed in this time will have to start again
 
-# oauth config
+# oauth provider config
 oauth:
   issuer: https://kryptonite.example.com
   tokenExpiration: "15m"

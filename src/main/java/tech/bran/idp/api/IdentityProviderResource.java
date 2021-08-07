@@ -9,7 +9,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import tech.bran.idp.service.auth.LoginService;
 import tech.bran.idp.util.Const;
 
-
+/**
+ * Identity Provider endpoints
+ */
 @RequiredArgsConstructor
 @Controller
 @RequestMapping

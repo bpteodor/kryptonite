@@ -11,7 +11,7 @@ import tech.bran.idp.service.repo.dto.UserData;
 import javax.annotation.PostConstruct;
 
 /**
- * dummy user db
+ * user db mock
  */
 @Slf4j
 @RequiredArgsConstructor

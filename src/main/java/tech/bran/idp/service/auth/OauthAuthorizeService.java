@@ -35,8 +35,7 @@ public class OauthAuthorizeService {
         Check.that(client).isNotNull().orSend("unauthorized_client");
 
         // check redirect_uri
-        Check.that(req.getRedirectUri()).emptyOrValidUri().as("Bad 'redirect_uri'")
-                .orSend("invalid_request");
+        Check.that(req.getRedirectUri()).emptyOrValidUri().as("Bad 'redirect_uri'").orSend("invalid_request");
         if (!isEmpty(client.getRedirectUris())) {
             Check.that(req.getRedirectUri()).isContainedIn(client.getRedirectUris())
                     .as("Invalid 'redirect_uri'").orSend("invalid_request");

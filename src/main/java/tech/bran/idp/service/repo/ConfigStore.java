@@ -10,7 +10,7 @@ import tech.bran.idp.service.repo.dto.ClientConfig;
 import javax.annotation.PostConstruct;
 
 /**
- * dummy config db
+ * db mock for client configuration
  */
 @Slf4j
 @RequiredArgsConstructor
@@ -21,11 +21,10 @@ public class ConfigStore {
 
     final AppConfig config;
 
-
     @PostConstruct
     public void init() {
         log.info("{} client configurations loaded", config.getClients().size());
-        // simulate the password was saved hashed
+        // simulate hashed passwords were saved
         config.getClients().values().forEach(i -> i.setClientSecret(encoder.encode(i.getClientSecret())));
     }
 

@@ -10,7 +10,6 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.util.UriComponentsBuilder;
 import tech.bran.idp.api.model.AuthzRequest;
-import tech.bran.idp.service.auth.SessionService;
 import tech.bran.idp.service.repo.TokenRepository;
 import tech.bran.idp.service.repo.dto.AuthSession;
 
@@ -30,9 +29,6 @@ public class TestTokenEndpoint {
 
     @Autowired
     protected MockMvc mockMvc;
-
-    @Autowired
-    SessionService sessionService;
 
     @Autowired
     TokenRepository tokenRepository;

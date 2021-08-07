@@ -13,6 +13,9 @@ import java.time.Duration;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Configuration mapping
+ */
 @Data
 @ConfigurationProperties
 @Validated
@@ -30,6 +33,9 @@ public class AppConfig {
     @NotEmpty
     final List<UserData> users;
 
+    /**
+     * OAuth2 specific config
+     */
     @Data
     public static class OauthConfig {
 
@@ -43,6 +49,9 @@ public class AppConfig {
         private String tokenSignatureHMAC;
     }
 
+    /**
+     * identity provider config
+     */
     @Data
     public static class IdpConfig {
 

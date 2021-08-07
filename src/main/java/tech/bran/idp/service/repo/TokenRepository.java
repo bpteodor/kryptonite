@@ -10,7 +10,7 @@ import java.util.Map;
 import static org.springframework.util.StringUtils.hasLength;
 
 /**
- * db for session & tokens
+ * db mock for session & tokens
  */
 @Slf4j
 @Repository

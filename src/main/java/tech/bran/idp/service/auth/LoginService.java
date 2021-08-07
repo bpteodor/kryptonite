@@ -9,7 +9,6 @@ import tech.bran.idp.service.repo.TokenRepository;
 import tech.bran.idp.service.repo.UserStore;
 import tech.bran.idp.service.repo.dto.AuthSession;
 import tech.bran.idp.service.repo.dto.UserData;
-import tech.bran.idp.util.Util;
 import tech.bran.idp.util.validation.AuthzResponseException;
 
 /**
@@ -26,7 +25,7 @@ public class LoginService {
     final SessionService sessionService;
     final AppConfig config;
 
-    // todo: try counter, account lock, etc
+    // todo: counter failed attempts, account lock, etc
     public String login(String username, String password, String ssoCookie) {
 
         final AuthSession session = tokenRepo.getSession(ssoCookie);
@@ -38,19 +37,18 @@ public class LoginService {
         final UserData user = userRepo.search(username);
         if (user == null) {
             log.info("unknown user {}. game over", username);
-            throw new AuthzResponseException(session.getRequest(), "access_denied", null);
+            //throw new AuthzResponseException(session.getRequest(), "access_denied", null);
+            return "redirect:/login.html"; // back to login page
         }
 
         if (!passwordEncoder.matches(password, user.getPassword())) {
             log.info("invalid credentials for user {}", username);
-            throw new AuthzResponseException(session.getRequest(), "access_denied", null);
+            //throw new AuthzResponseException(session.getRequest(), "access_denied", null);
+            return "redirect:/login.html"; // back to login page
         }
 
         log.info("user {} logged in", username);
         return sessionService.authzSuccess(session);
     }
 
-    // TODO
-    //public void grantScopes() {
-    //}
 }

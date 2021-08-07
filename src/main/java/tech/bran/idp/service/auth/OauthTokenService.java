@@ -41,7 +41,7 @@ public class OauthTokenService {
                 .orSendAuthorizationError("unsupported_grant_type", null);
 
         // check client credentials
-        final BasicAuthentication cred = Util.decodeAuthorization(req.getCredentials());
+        final BasicAuthentication cred = Util.decodeAuthorization(req.getClientCredentials());
         Check.that(cred).isNotNull().as("no credentials").orSend(401, "Unauthorized");
         assert cred != null; // to remove nasty warning
 

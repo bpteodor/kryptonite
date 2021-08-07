@@ -16,14 +16,17 @@ public class TokenResponse {
     @JsonProperty("access_token")
     private String accessToken;
 
+    // OPTIONAL
     @JsonProperty("refresh_token")
-    private String refreshToken;   // OPTIONAL
+    private String refreshToken;
 
     @JsonProperty("token_type")
     private String tokenType = "Bearer";
 
+    // RECOMMENDED
     @JsonProperty("expires_in")
-    private long expiresIn;      // RECOMMENDED
+    private long expiresIn;
 
-    private String scope;           // OPTIONAL if identical to the scope requested by the client
+    // OPTIONAL if identical to the scope requested by the client
+    private String scope;
 }

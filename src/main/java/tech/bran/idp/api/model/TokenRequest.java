@@ -12,5 +12,5 @@ public class TokenRequest {
     String redirectUri;
     String clientId;
 
-    String credentials;
+    String clientCredentials;
 }
