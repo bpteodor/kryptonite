@@ -10,19 +10,30 @@ import java.time.Duration;
 @ConfigurationProperties(prefix = "idp")
 public class AppConfig {
 
-    //@Value("${sso.secret}")
-    //private String ssoJwtHmacKey;
+    // OAuth ----------------------------------
+
+    @Value("${oauth.issuer}")
+    private String issuer;
+
+    @Value("${oauth.token.expiration:20m}")
+    private Duration tokenExpiration;
+
+    @Value("${oauth.token.signature.HMAC}")
+    private String tokenSignatureHMAC;
+
+
+    // IdP -------------------------------------
 
     @Value("${sso.timeout:1h}")
     private Duration ssoTimeout;
 
     /**
-     * if the user doesn't finish to auth in this time he/she will have to start again
+     * if the user doesn't proceed in this time he/she will have to start again
      */
-    @Value("${sso.timeout:5m}")
+    @Value("${sso.timeout:10m}")
     private Duration authTimeout;
 
 
-    @Value("${oauth.token.timeout:20m}")
-    private Duration tokenTimeout;
+    // General ---------------------------------
+
 }

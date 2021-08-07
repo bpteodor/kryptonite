@@ -17,4 +17,5 @@ public class AuthSession {
     private LocalDateTime expiration; // when the session expires
 
     private String authzCode;       // code returned by authorization endpoint
+
 }

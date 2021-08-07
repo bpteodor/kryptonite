@@ -13,6 +13,9 @@ import tech.bran.idp.util.Util;
 import tech.bran.idp.util.validation.AuthzResponseException;
 import tech.bran.idp.util.validation.ResponseException;
 
+import static org.springframework.http.HttpHeaders.CONTENT_TYPE;
+import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
+
 @Slf4j
 @ControllerAdvice
 public class OauthExceptionHandler extends ResponseEntityExceptionHandler {
@@ -21,15 +24,25 @@ public class OauthExceptionHandler extends ResponseEntityExceptionHandler {
     @ResponseBody
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     protected ResponseEntity<Object> handleValidationError(ResponseException ex) {
-        log.info("showing error in page: {}", ex.getMessage());
-        return ResponseEntity.status(ex.getHttpStatus()).body(new OauthErrorResponse().setError(ex.getMessage()));
+        log.info("showing error: {}", ex.getMessage());
+
+        final ResponseEntity.BodyBuilder resp = 401 == ex.getHttpStatus()
+                ? ResponseEntity.status(401).header("WWW-Authenticate", "Basic realm=\"Kryptonite\", charset=\"UTF-8\"")
+                : ResponseEntity.status(ex.getHttpStatus());
+
+        return resp
+                .header(CONTENT_TYPE, APPLICATION_JSON_VALUE)
+                .body(new OauthErrorResponse().setError(ex.getMessage()));
     }
 
     @ExceptionHandler({AuthzResponseException.class})
     protected ResponseEntity<Object> handleAuthzResponse(AuthzResponseException ex) {
 
-        if (null == ex.getRequest())
-            return ResponseEntity.badRequest().body(new OauthErrorResponse().setError(ex.getMessage()));
+        if (null == ex.getRequest()) {
+            return ResponseEntity.badRequest().body(new OauthErrorResponse()
+                    .setError(ex.getError())
+                    .setErrorDescription(ex.getDescription()));
+        }
 
         final String errUrl = Util.authzErr(ex.getRequest(), ex.getError(), ex.getDescription());
         log.info("redirecting to {}", errUrl);

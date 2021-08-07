@@ -5,8 +5,12 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import tech.bran.idp.api.model.AuthzRequest;
 import tech.bran.idp.api.model.TokenRequest;
+import tech.bran.idp.api.model.TokenResponse;
 import tech.bran.idp.service.oauth.AuthzService;
+import tech.bran.idp.service.oauth.TokenService;
 import tech.bran.idp.util.Const;
+
+import javax.servlet.http.HttpServletRequest;
 
 @RequiredArgsConstructor
 @Controller
@@ -14,6 +18,7 @@ import tech.bran.idp.util.Const;
 public class OauthResource {
 
     private final AuthzService authzService;
+    private final TokenService tokenService;
 
     @GetMapping("/authorize")
     public String authorize(@RequestParam("response_type") String responseType,
@@ -21,8 +26,6 @@ public class OauthResource {
                             @RequestParam(value = "scope", required = false) String scope,
                             @RequestParam(value = "redirect_uri", required = false) String redirectUri,
                             @RequestParam(value = "state", required = false) String state,
-                            //@RequestParam("code_challenge_method") String codeChallengeMethod, TODO pixie
-                            //@RequestParam("code_challenge") String codeChallenge
                             @CookieValue(name = Const.SSO_COOKIE_NAME, required = false) String ssoCookie) {
         return authzService.auth(
                 new AuthzRequest()
@@ -36,7 +39,17 @@ public class OauthResource {
 
 
     @PostMapping("/token")
-    public void token(@RequestBody TokenRequest req) {
-        // todo
+    @ResponseBody
+    public TokenResponse token(@RequestParam("grant_type") String grantType,
+                               @RequestParam("code") String code,
+                               @RequestParam("redirect_uri") String redirectUri,
+                               @RequestParam("client_id") String clientId,
+                               HttpServletRequest request) {
+        return tokenService.exchange(new TokenRequest()
+                .setGrantType(grantType)
+                .setCode(code)
+                .setRedirectUri(redirectUri)
+                .setClientId(clientId)
+                .setCredentials(request.getHeader("Authorization")));
     }
 }

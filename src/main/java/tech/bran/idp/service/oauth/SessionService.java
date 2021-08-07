@@ -1,9 +1,13 @@
 package tech.bran.idp.service.oauth;
 
+import io.fusionauth.jwt.Signer;
+import io.fusionauth.jwt.domain.JWT;
+import io.fusionauth.jwt.hmac.HMACSigner;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
+import org.springframework.util.StringUtils;
 import org.springframework.web.util.UriComponentsBuilder;
 import tech.bran.idp.api.model.AuthzRequest;
 import tech.bran.idp.config.AppConfig;
@@ -13,6 +17,8 @@ import tech.bran.idp.util.Const;
 import tech.bran.idp.util.Util;
 
 import javax.servlet.http.HttpServletResponse;
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -27,7 +33,7 @@ import static tech.bran.idp.util.Util.now;
 @Service
 public class SessionService {
 
-    final AppConfig appConfig;
+    final AppConfig config;
     final TokenRepository tokenRepo;
     final HttpServletResponse response;
 
@@ -37,7 +43,7 @@ public class SessionService {
             log.info("session {} found", ssoId);
             return null;
         }
-        if (now().isBefore(sso.getExpiration().plus(appConfig.getSsoTimeout()))) {
+        if (now().isBefore(sso.getExpiration().plus(config.getSsoTimeout()))) {
             log.info("session {} expired", ssoId);
             return null;
         }
@@ -52,11 +58,11 @@ public class SessionService {
         final String ssoId = UUID.randomUUID().toString();
         final AuthSession sso = new AuthSession()
                 .setRequest(req)
-                .setExpiration(exp(appConfig.getAuthTimeout()));
+                .setExpiration(exp(config.getAuthTimeout()));
 
         tokenRepo.saveSession(ssoId, sso);
 
-        Util.setCookie(response, Const.SSO_COOKIE_NAME, ssoId, appConfig.getAuthTimeout());
+        Util.setCookie(response, Const.SSO_COOKIE_NAME, ssoId, config.getAuthTimeout());
 
         log.debug("generated new session {}", ssoId);
         return sso;
@@ -73,11 +79,41 @@ public class SessionService {
 
         // update session expiration time
         sso.setAuthzCode(authzCode)
-                .setExpiration(Util.exp(appConfig.getAuthTimeout()));
+                .setExpiration(Util.exp(config.getAuthTimeout()));
 
         return UriComponentsBuilder.fromUriString(redirectUri)
                 .queryParam("code", authzCode)
                 .queryParamIfPresent("state", Optional.ofNullable(sso.getRequest().getState()))
                 .build().toUriString();
+    }
+
+    public AuthSession getSessionByCode(String code) {
+        return tokenRepo.getSessionByCode(code);
+    }
+
+    /**
+     * @param session valid session
+     * @return new access_token
+     * @see <a href="https://github.com/FusionAuth/fusionauth-jwt">repo</a>
+     */
+    public String generateAccessToken(AuthSession session) {
+
+        // in the enterprise version use algorithm configured for client :)
+        final Signer signer = HMACSigner.newSHA256Signer(config.getTokenSignatureHMAC());
+
+        final ZonedDateTime now = ZonedDateTime.now(ZoneOffset.UTC);
+
+        // Build a new JWT with an issuer(iss), issued at(iat), subject(sub) and expiration(exp)
+        final JWT jwt = new JWT().setIssuer(config.getIssuer())
+                .setIssuedAt(now)
+                .setSubject(session.getSubject())
+                .setExpiration(now.plus(config.getTokenExpiration()));
+
+        if (StringUtils.hasLength(session.getRequest().getScope()))
+            jwt.addClaim("scope", session.getRequest().getScope());
+
+        // Sign and encode the JWT to a JSON string representation
+        log.info("access token generated");
+        return JWT.getEncoder().encode(jwt, signer);
     }
 }
