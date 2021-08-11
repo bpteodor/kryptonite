@@ -35,6 +35,6 @@ Requirements:
 mvn clean package
 
 # run
-java -jar target/kryptonite-0.0.1-SNAPSHOT.jar --spring.config.location=file:.config/application-config.yaml
+java -jar target/kryptonite-0.0.1-SNAPSHOT.jar --spring.config.location=file:config/application-config.yaml
 ```
 
